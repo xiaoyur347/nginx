@@ -38,6 +38,36 @@ ngx_test="$CC $CC_TEST_FLAGS $CC_AUX_FLAGS \
 
 eval "$ngx_test >> $NGX_AUTOCONF_ERR 2>&1"
 
+if [ "`file $NGX_AUTOTEST | grep x86`" = "" ]; then
+    for i in `seq 4 4 8`
+    do
+        cat << END > $NGX_AUTOTEST.c
+
+#include <sys/types.h>
+#include <sys/time.h>
+$NGX_INCLUDE_UNISTD_H
+#include <signal.h>
+#include <stdio.h>
+#include <sys/resource.h>
+$NGX_INCLUDE_INTTYPES_H
+$NGX_INCLUDE_AUTO_CONFIG_H
+
+int main(void) {
+    printf("%d", (int) sizeof($ngx_type) == $i);
+    return 0;
+}
+
+END
+
+        eval "$ngx_test >> $NGX_AUTOCONF_ERR 2>&1"
+        if [ -f $NGX_AUTOTEST ]; then
+            ngx_size=$i
+            echo " $ngx_size bytes"
+            rm -rf $NGX_AUTOTEST
+            break
+        fi
+    done
+fi
 
 if [ -x $NGX_AUTOTEST ]; then
     ngx_size=`$NGX_AUTOTEST`

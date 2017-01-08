@@ -53,7 +53,7 @@ if [ -x $NGX_AUTOTEST ]; then
 
         yes)
             # /bin/sh is used to intercept "Killed" or "Abort trap" messages
-            if /bin/sh -c $NGX_AUTOTEST >> $NGX_AUTOCONF_ERR 2>&1; then
+            if [ "`file $NGX_AUTOTEST | grep x86`" = "" ] || [ /bin/sh -c $NGX_AUTOTEST >> $NGX_AUTOCONF_ERR 2>&1 ]; then
                 echo " found"
                 ngx_found=yes
 

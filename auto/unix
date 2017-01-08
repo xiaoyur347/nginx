@@ -752,6 +752,15 @@ if [ $ngx_found = no ]; then
     . auto/feature
 fi
 
+if [ $ngx_found = no ]; then
+    cat << END >> $NGX_AUTO_CONFIG_H
+
+#ifndef $ngx_feature_name
+#define $ngx_feature_name  168
+#endif
+
+END
+fi
 
 ngx_feature="localtime_r()"
 ngx_feature_name="NGX_HAVE_LOCALTIME_R"
